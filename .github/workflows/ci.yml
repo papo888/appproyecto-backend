@@ -7,14 +7,12 @@ on:
     branches: ["main"]
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
+      
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -50,16 +48,14 @@ jobs:
         run: npm audit --json > audit-report.json
 
       - name: Upload audit report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: audit-report
           path: audit-report.json
 
   docker-build:
     runs-on: ubuntu-latest
-    needs:
-      - test
-      - security-audit
+    needs: security-audit
 
     steps:
       - name: Checkout repo
