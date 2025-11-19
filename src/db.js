@@ -4,18 +4,18 @@ let sequelize;
 
 if (process.env.NODE_ENV === "test") {
   console.log("🧪 Usando SQLite en memoria para tests");
+  sequelize = new Sequelize("sqlite::memory:", { logging: false });
+} else if (process.env.DATABASE_URL) {
+  console.log("🔌 Conectando con DATABASE_URL...");
 
-  sequelize = new Sequelize("sqlite::memory:", {
-    logging: false
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
+    dialect: "postgres",
+    protocol: "postgres",
+    logging: false,
   });
 
-  // 🟢 Sincronizar modelos antes de correr tests
-  (async () => {
-    await sequelize.sync({ force: true });
-  })();
-
 } else {
-  console.log("🔌 Conectando a Postgres real...");
+  console.log("🔌 Conectando con variables individuales...");
 
   sequelize = new Sequelize(
     process.env.POSTGRES_DB,
@@ -23,14 +23,23 @@ if (process.env.NODE_ENV === "test") {
     process.env.POSTGRES_PASSWORD,
     {
       host: process.env.POSTGRES_HOST,
+      port: process.env.POSTGRES_PORT,
       dialect: "postgres",
       logging: false,
     }
   );
+}
 
-  // 🟢 Sincronizar en desarrollo por si acaso
+// Intentar conexión (solo fuera de test)
+if (process.env.NODE_ENV !== "test") {
   (async () => {
-    await sequelize.sync();
+    try {
+      await sequelize.authenticate();
+      console.log("✅ Conectado correctamente a Postgres");
+      await sequelize.sync();
+    } catch (err) {
+      console.error("❌ Error conectando a Postgres:", err);
+    }
   })();
 }
 

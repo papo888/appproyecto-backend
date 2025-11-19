@@ -7,6 +7,7 @@ on:
     branches: ["main"]
 
 jobs:
+
   test:
     runs-on: ubuntu-latest
 
@@ -28,9 +29,37 @@ jobs:
           JWT_SECRET: test_secret_key
         run: npm test
 
-  docker-build:
+  security-audit:
+    name: Security Audit (npm audit)
     runs-on: ubuntu-latest
     needs: test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+
+      - name: Run npm audit
+        run: npm audit --json > audit-report.json
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: audit-report
+          path: audit-report.json
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs:
+      - test
+      - security-audit
 
     steps:
       - name: Checkout repo
@@ -41,5 +70,4 @@ jobs:
 
       - name: Build backend docker image
         run: docker build -t backend-ci .
-
 
