@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  database:
+    image: postgres:15
+    container_name: backend_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: fittrack
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build: .
+    container_name: fittrack_backend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgres://admin:admin123@database:5432/fittrack
+      JWT_SECRET: supersecretkey
+    volumes:
+      - .:/app
+
+volumes:
+  pgdata:
+
