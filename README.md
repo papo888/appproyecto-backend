@@ -1,4 +1,4 @@
-# **FitTrack (Backend)**
+# **FitTrack**
 
 **Proyecto Final – Arquitectura de Software**
 **Autores:**
