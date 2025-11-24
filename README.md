@@ -33,6 +33,18 @@ El backend se diseñó bajo principios de **modularidad y mantenibilidad**, con 
 
 ---
 
+# **App FitTrack (Frontend Móvil)**
+
+La aplicación móvil **FitTrack** fue desarrollada en **Android Studio** como complemento del backend presentado en este repositorio.
+Su objetivo es ofrecer una interfaz intuitiva donde el usuario puede **registrarse, iniciar sesión, consultar su progreso semanal y visualizar métricas clave**, conectándose directamente con la API REST implementada en Node.js.
+
+La app está diseñada bajo principios de **arquitectura limpia**, separación de capas y uso adecuado de **ViewModels, Repositorios, Providers de datos y patrones de diseño**, lo que facilita el mantenimiento y la extensibilidad.
+
+**Descarga**
+El código fuente completo de la aplicación móvil se encuentra adjunto en este repositorio en formato **`.zip`**, listo para importar y ejecutar directamente en Android Studio.
+
+---
+
 # **Pruebas Implementadas**
 
 ### ✔ **Pruebas Unitarias (Jest)**
